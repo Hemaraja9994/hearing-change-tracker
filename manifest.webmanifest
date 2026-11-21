@@ -1,0 +1,11 @@
+{
+  "name": "Hearing Change Tracker",
+  "short_name": "Hearing Tracker",
+  "description": "A monthly check-in that notices when everyday hearing may be changing.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F7F9FB",
+  "theme_color": "#17212E",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
