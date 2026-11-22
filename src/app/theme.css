@@ -1,0 +1,38 @@
+.theme-src{}
+/* ===== hearing-change-tracker theme ===== */
+:root{
+  --color-paper: #F7F4EC;
+  --color-surface: #FFFDF8;
+  --color-ink: #333A2E;
+  --color-muted: #5C6152;
+  --color-line: #DDD7C5;
+  --color-track: #EAE5D6;
+  --color-accent: #4E7A3E;
+  --color-grid: #EAE5D6;
+  --font-sans: "Source Sans 3","Noto Sans Kannada","Noto Sans Telugu","Noto Sans Devanagari","Atkinson Hyperlegible",system-ui,sans-serif;
+  --font-display: "Newsreader","Noto Sans Kannada","Noto Sans Telugu","Noto Sans Devanagari","Atkinson Hyperlegible",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+  --color-paper: #14160F;
+  --color-surface: #1D2016;
+  --color-ink: #EEF0E6;
+  --color-accent: #86C56C;
+  --color-grid: #22261A;
+  --color-muted: #A3B1C2;
+  --color-line: #2B3A4B;
+  --color-track: #22303F;
+  }
+}
+body{
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+h1,h2,h3,h4{ font-family: var(--font-display); }
+header.bg-ink{
+  background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+html{font-size:17px}
