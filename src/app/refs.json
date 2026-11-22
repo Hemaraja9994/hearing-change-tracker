@@ -1,0 +1,17 @@
+[
+  { "id": "gradual", "title": "Age-related hearing loss is gradual", "tags": ["presbycusis", "gradual", "age", "slow", "noise", "high frequency", "aware"],
+    "text": "Age-related hearing loss (presbycusis) usually comes on slowly over years, starting with high-pitched sounds and difficulty in noise, so the person adapts and often does not notice it. A regular check against earlier answers helps catch the change earlier.",
+    "source": "World Health Organization. World report on hearing", "year": 2021, "url": "https://www.who.int/publications/i/item/9789240020481", "checked": "Nov 2026" },
+  { "id": "why-early", "title": "Why finding it early matters", "tags": ["early", "untreated", "isolation", "cognition", "hearing aid", "benefit"],
+    "text": "Untreated hearing loss is linked with social isolation, low mood and faster cognitive decline. Identifying it earlier and fitting hearing aids when needed supports communication and wellbeing; delay makes adjustment to aids harder.",
+    "source": "Lancet Commission on hearing loss / WHO World report on hearing", "year": 2021, "url": "https://www.who.int/publications/i/item/9789240020481", "checked": "Nov 2026" },
+  { "id": "noise-difficulty", "title": "Trouble in noise is an early sign", "tags": ["noise", "speech in noise", "restaurant", "wedding", "early sign", "snr"],
+    "text": "Difficulty following speech in a noisy place — a wedding, a market, a restaurant — while managing in a quiet room is one of the earliest everyday signs of hearing loss, because background noise masks the softer high-frequency sounds of speech first.",
+    "source": "British Society of Audiology; WHO World report on hearing", "year": 2021, "checked": "Nov 2026" },
+  { "id": "hearwho", "title": "hearWHO and proper testing", "tags": ["hearwho", "screening", "app", "digits in noise", "audiologist", "audiometry", "test"],
+    "text": "A questionnaire like this one is a prompt, not a diagnosis. WHO's free hearWHO app gives a quick digits-in-noise screen, and an RCI-registered audiologist can carry out full pure-tone audiometry to confirm the degree and type of any loss.",
+    "source": "World Health Organization. hearWHO app", "year": 2023, "url": "https://www.who.int/teams/noncommunicable-diseases/sensory-functions-disability-and-rehabilitation/hearwho", "checked": "Nov 2026" },
+  { "id": "sudden", "title": "Sudden hearing loss is an emergency", "tags": ["sudden", "one ear", "emergency", "ssnhl", "urgent", "same day"],
+    "text": "A sudden drop in hearing, usually in one ear, over hours to a few days is a medical emergency (sudden sensorineural hearing loss). Prompt treatment within days gives the best chance of recovery — see a doctor or ENT the same day; do not wait for a monthly check.",
+    "source": "Chandrasekhar SS, et al. Clinical practice guideline: sudden hearing loss (update). Otolaryngol Head Neck Surg 161(1 Suppl):S1–S45", "year": 2019, "url": "https://pubmed.ncbi.nlm.nih.gov/31369359/", "checked": "Nov 2026" }
+]

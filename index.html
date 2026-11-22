@@ -2,135 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hearing Change Tracker</title>
-<meta name="description" content="A one-minute monthly check-in for older adults and families that notices when everyday hearing may be changing.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>%APP_NAME%</title>
+<meta name="description" content="%APP_DESC%">
 <meta name="theme-color" content="#17212E">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="kit.css">
-<style>
-.wrap{max-width:880px}
-body{font-size:1.06rem}
-.q{padding:12px 0;border-bottom:1px solid var(--line)}
-.q:last-child{border-bottom:0}
-.q p{margin:0 0 8px;font-weight:700}
-.q .seg button{padding:9px 16px;font-size:.95rem}
-.status{font-size:1.2rem;font-weight:700}
-</style>
 </head>
 <body>
-<header class="top"><div class="wrap">
-  <div class="brand"><img src="icon.svg" width="34" height="34" alt=""><h1><span data-i18n="appName"></span><small data-i18n="appSub"></small></h1></div>
-  <div class="top-tools"><span class="net" id="net" role="status" aria-live="polite"></span><label class="sr" for="lang" data-i18n="language">Language</label><select id="lang" class="lang"></select></div>
-</div></header>
-
-<main class="wrap">
-  <section class="intro"><h2 data-i18n="h2"></h2><p data-i18n="intro"></p></section>
-
-  <section class="panel" style="margin-top:18px" aria-labelledby="sTitle"><h3 id="sTitle" data-i18n="statusTitle"></h3><div id="status" aria-live="polite"></div></section>
-
-  <section class="panel" style="margin-top:18px" aria-labelledby="cTitle">
-    <h3 id="cTitle" data-i18n="checkTitle"></h3>
-    <p class="lead" data-i18n="checkIntro"></p>
-    <div id="qs"></div>
-    <div class="row2">
-      <label class="field" for="tv"><span data-i18n="tvVol"></span><span class="hint" data-i18n="tvHint"></span><input type="number" id="tv" min="0" max="100" inputmode="numeric"></label>
-      <label class="field" for="who"><span data-i18n="who"></span><select id="who"></select></label>
-    </div>
-    <p class="err" id="err" role="alert"></p>
-    <div class="actions"><button type="button" class="primary" id="save" data-i18n="save"></button></div>
-  </section>
-
-  <section class="panel" style="margin-top:18px" aria-labelledby="hTitle">
-    <div class="head-row"><h3 id="hTitle" data-i18n="histTitle"></h3><div class="actions" style="margin-top:0"><button type="button" class="small" id="csv">CSV</button></div></div>
-    <div id="chart"></div><div class="table-scroll" id="hist" style="margin-top:10px"></div>
-  </section>
-
-  <section class="callout" style="margin-top:18px"><h4 data-i18n="testTitle"></h4><p style="margin:0" data-i18n="testText"></p>
-    <p style="margin:8px 0 0"><a href="https://www.who.int/teams/noncommunicable-diseases/sensory-functions-disability-and-rehabilitation/hearwho" target="_blank" rel="noopener">hearWHO (WHO)</a></p></section>
-</main>
-
-<footer><div class="wrap">
-  <p data-i18n="disclaimer"></p>
-  <p data-i18n="reviewNote"></p>
-  <p id="credit"></p>
-</div></footer>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-<script src="kit.js"></script>
-<script>
-const QS = [
-  {en:"I ask people to repeat what they said.", kn:"ಜನರು ಹೇಳಿದ್ದನ್ನು ಮತ್ತೆ ಹೇಳಲು ಕೇಳುತ್ತೇನೆ.", te:"ఇతరులు చెప్పినది మళ్లీ చెప్పమని అడుగుతాను.", hi:"मैं लोगों से बात दोहराने को कहता/कहती हूँ।"},
-  {en:"I find it hard to follow talk in noisy places, like a wedding or market.", kn:"ಮದುವೆ, ಮಾರುಕಟ್ಟೆಯಂತಹ ಗದ್ದಲದ ಸ್ಥಳಗಳಲ್ಲಿ ಮಾತು ಅರ್ಥವಾಗಲು ಕಷ್ಟ.", te:"పెళ్లి, మార్కెట్ లాంటి గోల ఉన్న చోట్ల మాటలు అర్థం చేసుకోవడం కష్టం.", hi:"शादी या बाज़ार जैसी शोर वाली जगहों पर बात समझना मुश्किल लगता है।"},
-  {en:"Family says the TV or phone is too loud.", kn:"ಟಿವಿ ಅಥವಾ ಫೋನ್ ತುಂಬಾ ಜೋರಾಗಿದೆ ಎಂದು ಮನೆಯವರು ಹೇಳುತ್ತಾರೆ.", te:"టీవీ లేదా ఫోన్ చాలా గట్టిగా ఉందని ఇంట్లోవాళ్లు అంటారు.", hi:"घर वाले कहते हैं कि टीवी या फ़ोन बहुत तेज़ है।"},
-  {en:"I miss the doorbell, the phone ringing or the cooker whistle.", kn:"ಬಾಗಿಲ ಗಂಟೆ, ಫೋನ್ ರಿಂಗ್ ಅಥವಾ ಕುಕ್ಕರ್ ಸೀಟಿ ಕೇಳಿಸುವುದಿಲ್ಲ.", te:"కాలింగ్ బెల్, ఫోన్ రింగ్ లేదా కుక్కర్ విజిల్ వినిపించదు.", hi:"दरवाज़े की घंटी, फ़ोन की रिंग या कुकर की सीटी छूट जाती है।"},
-  {en:"I find it hard to hear on the phone.", kn:"ಫೋನ್‌ನಲ್ಲಿ ಕೇಳಿಸಿಕೊಳ್ಳಲು ಕಷ್ಟ.", te:"ఫోన్‌లో వినడం కష్టం.", hi:"फ़ोन पर सुनना मुश्किल लगता है।"},
-  {en:"I avoid gatherings because following conversation is tiring.", kn:"ಮಾತುಕತೆ ಅರ್ಥಮಾಡಿಕೊಳ್ಳುವುದು ದಣಿವಾಗುವುದರಿಂದ ಸಮಾರಂಭಗಳನ್ನು ತಪ್ಪಿಸುತ್ತೇನೆ.", te:"సంభాషణ అర్థం చేసుకోవడం అలసటగా ఉండటంతో సమావేశాలకు దూరంగా ఉంటాను.", hi:"बातचीत समझना थकाने वाला लगता है, इसलिए मैं मिलने-जुलने से बचता/बचती हूँ।"}
-];
-const I18N_APP = {
-  en:{ appName:"Hearing Change Tracker", appSub:"A one-minute monthly check", h2:"Hearing usually fades slowly. A monthly check notices it.", intro:"Answer six everyday questions once a month, alone or with a family member. The tracker compares each month with your first ones and tells you when it is time for a hearing test.",
-    statusTitle:"Where things stand", checkTitle:"This month's check", checkIntro:"Think about the last month.", never:"Never", sometimes:"Sometimes", often:"Often",
-    tvVol:"TV volume number you usually use", tvHint:"Optional. The number shown on the TV when you change the volume.", who:"Answered by", self:"Myself", family:"With family", save:"Save this month",
-    need:"Answer all six questions.", saved:"Saved", histTitle:"Over time", score:"Score", date:"Date", tv:"TV",
-    first:"Save your first check to start tracking. Come back next month.", stable:"No clear change since your first checks.", change:"Your answers suggest hearing may be getting worse. Please get a hearing test.", high:"Your answers point to hearing difficulty. Please get a hearing test.",
-    testTitle:"Get your hearing tested", testText:"An RCI-registered audiologist can test your hearing properly. The WHO's free hearWHO app also offers a quick hearing check.",
-    disclaimer:"Not a hearing test. These questions were written for this app and have not been validated. Sudden hearing loss in one ear is an emergency: see a doctor the same day." },
-  kn:{ appName:"Hearing Change Tracker", appSub:"ಒಂದು ನಿಮಿಷದ ಮಾಸಿಕ ಪರಿಶೀಲನೆ", h2:"ಶ್ರವಣ ಸಾಮಾನ್ಯವಾಗಿ ನಿಧಾನವಾಗಿ ಕಡಿಮೆಯಾಗುತ್ತದೆ. ಮಾಸಿಕ ಪರಿಶೀಲನೆ ಅದನ್ನು ಗುರುತಿಸುತ್ತದೆ.", intro:"ತಿಂಗಳಿಗೊಮ್ಮೆ ಆರು ದೈನಂದಿನ ಪ್ರಶ್ನೆಗಳಿಗೆ ನೀವೇ ಅಥವಾ ಮನೆಯವರೊಂದಿಗೆ ಉತ್ತರಿಸಿ. ಪ್ರತಿ ತಿಂಗಳನ್ನು ಮೊದಲ ತಿಂಗಳುಗಳೊಂದಿಗೆ ಹೋಲಿಸಿ ಶ್ರವಣ ಪರೀಕ್ಷೆಯ ಸಮಯ ಬಂದಾಗ ತಿಳಿಸುತ್ತದೆ.",
-    statusTitle:"ಈಗಿನ ಸ್ಥಿತಿ", checkTitle:"ಈ ತಿಂಗಳ ಪರಿಶೀಲನೆ", checkIntro:"ಕಳೆದ ಒಂದು ತಿಂಗಳನ್ನು ನೆನಪಿಸಿಕೊಳ್ಳಿ.", never:"ಎಂದಿಗೂ ಇಲ್ಲ", sometimes:"ಕೆಲವೊಮ್ಮೆ", often:"ಆಗಾಗ",
-    tvVol:"ನೀವು ಸಾಮಾನ್ಯವಾಗಿ ಇಡುವ ಟಿವಿ ಶಬ್ದದ ಸಂಖ್ಯೆ", tvHint:"ಐಚ್ಛಿಕ. ಶಬ್ದ ಬದಲಿಸುವಾಗ ಟಿವಿಯಲ್ಲಿ ಕಾಣುವ ಸಂಖ್ಯೆ.", who:"ಉತ್ತರಿಸಿದವರು", self:"ನಾನೇ", family:"ಮನೆಯವರೊಂದಿಗೆ", save:"ಈ ತಿಂಗಳು ಉಳಿಸಿ",
-    need:"ಆರೂ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ.", saved:"ಉಳಿಸಲಾಗಿದೆ", histTitle:"ಕಾಲಾನಂತರ", score:"ಅಂಕ", date:"ದಿನಾಂಕ", tv:"ಟಿವಿ",
-    first:"ಟ್ರ್ಯಾಕಿಂಗ್ ಆರಂಭಿಸಲು ಮೊದಲ ಪರಿಶೀಲನೆ ಉಳಿಸಿ. ಮುಂದಿನ ತಿಂಗಳು ಮತ್ತೆ ಬನ್ನಿ.", stable:"ಮೊದಲ ಪರಿಶೀಲನೆಗಳಿಂದ ಸ್ಪಷ್ಟ ಬದಲಾವಣೆ ಇಲ್ಲ.", change:"ಶ್ರವಣ ಕಡಿಮೆಯಾಗುತ್ತಿರಬಹುದು ಎಂದು ನಿಮ್ಮ ಉತ್ತರಗಳು ಸೂಚಿಸುತ್ತವೆ. ದಯವಿಟ್ಟು ಶ್ರವಣ ಪರೀಕ್ಷೆ ಮಾಡಿಸಿ.", high:"ನಿಮ್ಮ ಉತ್ತರಗಳು ಶ್ರವಣ ತೊಂದರೆಯನ್ನು ಸೂಚಿಸುತ್ತವೆ. ದಯವಿಟ್ಟು ಶ್ರವಣ ಪರೀಕ್ಷೆ ಮಾಡಿಸಿ.",
-    testTitle:"ಶ್ರವಣ ಪರೀಕ್ಷೆ ಮಾಡಿಸಿ", testText:"RCI ನೋಂದಾಯಿತ ಶ್ರವಣಶಾಸ್ತ್ರಜ್ಞರು ಸರಿಯಾಗಿ ಪರೀಕ್ಷಿಸಬಹುದು. WHO ಯ ಉಚಿತ hearWHO ಆ್ಯಪ್ ತ್ವರಿತ ಶ್ರವಣ ಪರಿಶೀಲನೆ ನೀಡುತ್ತದೆ.",
-    disclaimer:"ಇದು ಶ್ರವಣ ಪರೀಕ್ಷೆಯಲ್ಲ. ಈ ಪ್ರಶ್ನೆಗಳನ್ನು ಈ ಆ್ಯಪ್‌ಗಾಗಿ ಬರೆಯಲಾಗಿದೆ, ಮೌಲ್ಯೀಕರಿಸಿಲ್ಲ. ಒಂದು ಕಿವಿಯಲ್ಲಿ ಹಠಾತ್ ಶ್ರವಣ ನಷ್ಟ ತುರ್ತು ಪರಿಸ್ಥಿತಿ: ಅದೇ ದಿನ ವೈದ್ಯರನ್ನು ಕಾಣಿ." },
-  te:{ appName:"Hearing Change Tracker", appSub:"ఒక్క నిమిషం నెలవారీ పరిశీలన", h2:"వినికిడి సాధారణంగా నెమ్మదిగా తగ్గుతుంది. నెలవారీ పరిశీలన దాన్ని గుర్తిస్తుంది.", intro:"నెలకు ఒకసారి ఆరు రోజువారీ ప్రశ్నలకు మీరే లేదా కుటుంబ సభ్యులతో కలిసి సమాధానం ఇవ్వండి. ప్రతి నెలను మొదటి నెలలతో పోల్చి, వినికిడి పరీక్షకు సమయం వచ్చినప్పుడు చెబుతుంది.",
-    statusTitle:"ప్రస్తుత పరిస్థితి", checkTitle:"ఈ నెల పరిశీలన", checkIntro:"గత నెలను గుర్తు చేసుకోండి.", never:"ఎప్పుడూ లేదు", sometimes:"కొన్నిసార్లు", often:"తరచుగా",
-    tvVol:"మీరు సాధారణంగా పెట్టే టీవీ వాల్యూమ్ సంఖ్య", tvHint:"ఐచ్ఛికం. వాల్యూమ్ మార్చినప్పుడు టీవీలో కనిపించే సంఖ్య.", who:"సమాధానం ఇచ్చినవారు", self:"నేనే", family:"కుటుంబంతో", save:"ఈ నెల సేవ్ చేయండి",
-    need:"ఆరు ప్రశ్నలకూ సమాధానం ఇవ్వండి.", saved:"సేవ్ అయింది", histTitle:"కాలక్రమంలో", score:"స్కోర్", date:"తేదీ", tv:"టీవీ",
-    first:"ట్రాకింగ్ ప్రారంభించడానికి మొదటి పరిశీలన సేవ్ చేయండి. వచ్చే నెల మళ్లీ రండి.", stable:"మొదటి పరిశీలనల నుండి స్పష్టమైన మార్పు లేదు.", change:"వినికిడి తగ్గుతూ ఉండవచ్చని మీ సమాధానాలు సూచిస్తున్నాయి. దయచేసి వినికిడి పరీక్ష చేయించుకోండి.", high:"మీ సమాధానాలు వినికిడి సమస్యను సూచిస్తున్నాయి. దయచేసి వినికిడి పరీక్ష చేయించుకోండి.",
-    testTitle:"వినికిడి పరీక్ష చేయించుకోండి", testText:"RCI నమోదిత ఆడియాలజిస్ట్ సరిగ్గా పరీక్షించగలరు. WHO ఉచిత hearWHO యాప్ త్వరిత వినికిడి పరిశీలన అందిస్తుంది.",
-    disclaimer:"ఇది వినికిడి పరీక్ష కాదు. ఈ ప్రశ్నలు ఈ యాప్ కోసం రాసినవి, ధృవీకరించబడలేదు. ఒక చెవిలో ఆకస్మిక వినికిడి లోపం అత్యవసరం: అదే రోజు డాక్టర్‌ను కలవండి." },
-  hi:{ appName:"Hearing Change Tracker", appSub:"एक मिनट की मासिक जाँच", h2:"सुनने की क्षमता आमतौर पर धीरे-धीरे घटती है। मासिक जाँच इसे पकड़ लेती है।", intro:"महीने में एक बार छह रोज़मर्रा के सवालों के जवाब दें, अकेले या परिवार के साथ। ट्रैकर हर महीने की तुलना शुरुआती महीनों से करता है और बताता है कि कब श्रवण जाँच करानी चाहिए।",
-    statusTitle:"अभी की स्थिति", checkTitle:"इस महीने की जाँच", checkIntro:"पिछले एक महीने के बारे में सोचें।", never:"कभी नहीं", sometimes:"कभी-कभी", often:"अक्सर",
-    tvVol:"टीवी की आवाज़ का नंबर जो आप आमतौर पर रखते हैं", tvHint:"वैकल्पिक। आवाज़ बदलते समय टीवी पर दिखने वाला नंबर।", who:"जवाब दिए", self:"ख़ुद", family:"परिवार के साथ", save:"इस महीने को सहेजें",
-    need:"सभी छह सवालों के जवाब दें।", saved:"सहेजा गया", histTitle:"समय के साथ", score:"अंक", date:"तारीख़", tv:"टीवी",
-    first:"ट्रैकिंग शुरू करने के लिए पहली जाँच सहेजें। अगले महीने फिर आएँ।", stable:"शुरुआती जाँचों से कोई साफ़ बदलाव नहीं।", change:"आपके जवाब बताते हैं कि सुनना कम हो रहा हो सकता है। कृपया श्रवण जाँच कराएँ।", high:"आपके जवाब सुनने में कठिनाई की ओर इशारा करते हैं। कृपया श्रवण जाँच कराएँ।",
-    testTitle:"श्रवण जाँच कराएँ", testText:"RCI-पंजीकृत ऑडियोलॉजिस्ट ठीक से जाँच कर सकते हैं। WHO का मुफ़्त hearWHO ऐप भी जल्दी श्रवण जाँच देता है।",
-    disclaimer:"यह श्रवण जाँच नहीं है। ये सवाल इस ऐप के लिए लिखे गए हैं और प्रमाणित नहीं हैं। एक कान में अचानक सुनाई कम होना आपात स्थिति है: उसी दिन डॉक्टर से मिलें।" }
-};
-const KEY = "hct-log";
-let log = store.get(KEY, []), ans = {};
-function status(){
-  if (!log.length) return {k:"first", c:"info"};
-  const sorted = log.slice().sort((a,b)=>a.date.localeCompare(b.date)), last = sorted[sorted.length-1];
-  const base = sorted.slice(0, Math.min(3, sorted.length - 1));
-  if (last.score >= 7) return {k:"high", c:"high"};
-  if (base.length){ const b = base.reduce((s,x)=>s+x.score,0)/base.length, bt = base.filter(x=>x.tv!=null);
-    const tvUp = bt.length && last.tv != null && last.tv - bt.reduce((s,x)=>s+x.tv,0)/bt.length >= 3;
-    if (last.score - b >= 3 || tvUp) return {k:"change", c:"mid"}; }
-  return {k: sorted.length < 2 ? "first" : "stable", c: sorted.length < 2 ? "info" : "ok"};
-}
-function render(){
-  $("#who").innerHTML = `<option value="self">${esc(t("self"))}</option><option value="family">${esc(t("family"))}</option>`;
-  $("#qs").innerHTML = QS.map((q,i) => `<div class="q"><p>${esc(pick(q))}</p><div class="seg" role="group" aria-label="${esc(pick(q))}">${[["never",0],["sometimes",1],["often",2]].map(([k,v]) => `<button type="button" data-q="${i}" data-v="${v}" aria-pressed="${ans[i]===v}">${esc(t(k))}</button>`).join("")}</div></div>`).join("");
-  const s = status();
-  $("#status").innerHTML = `<p class="status"><span class="pill ${s.c}">${s.c==="high"||s.c==="mid"?"!":"✓"}</span> ${esc(t(s.k))}</p>`;
-  const sorted = log.slice().sort((a,b)=>a.date.localeCompare(b.date));
-  $("#chart").innerHTML = sorted.length >= 2 ? lineChart([{label:t("score"), color:"var(--accent)", points:sorted.map(x=>({x:new Date(x.date+"T12:00"), y:x.score}))}, ...(sorted.some(x=>x.tv!=null) ? [{label:t("tv"), color:"var(--mid)", points:sorted.filter(x=>x.tv!=null).map(x=>({x:new Date(x.date+"T12:00"), y:x.tv}))}] : [])], {yMin:0}) : "";
-  $("#hist").innerHTML = sorted.length ? `<table class="rec"><thead><tr><th>${esc(t("date"))}</th><th>${esc(t("score"))} (0–12)</th><th>${esc(t("tv"))}</th><th></th></tr></thead><tbody>${sorted.slice().reverse().map(x => `<tr><td>${esc(fmtDate(x.date))}</td><td class="num">${x.score}</td><td class="num">${x.tv ?? "–"}</td><td><button type="button" class="small danger" data-del="${x.id}">✕</button></td></tr>`).join("")}</tbody></table>` : "";
-}
-$("#qs").addEventListener("click", e => { const b = e.target.closest("[data-q]"); if (!b) return; ans[b.dataset.q] = Number(b.dataset.v); render(); });
-$("#save").addEventListener("click", () => {
-  if (Object.keys(ans).length < QS.length){ $("#err").textContent = t("need"); return; } $("#err").textContent = "";
-  const tv = $("#tv").value === "" ? null : Number($("#tv").value);
-  log.push({id:uid(), date:todayISO(), score:Object.values(ans).reduce((s,v)=>s+v,0), answers:{...ans}, tv, who:$("#who").value});
-  store.set(KEY, log); ans = {}; $("#tv").value = ""; render(); toast(t("saved"));
-});
-$("#hist").addEventListener("click", e => { if (!e.target.dataset.del) return; log = log.filter(x => x.id !== e.target.dataset.del); store.set(KEY, log); render(); });
-$("#csv").addEventListener("click", () => downloadCSV([["date","score_0_12","tv_volume","answered_by",...QS.map((q,i)=>"q"+(i+1))], ...log.map(x => [x.date,x.score,x.tv??"",x.who,...QS.map((q,i)=>x.answers[i])])], `hearing-change-${todayISO()}.csv`));
-KIT.start({ i18n: I18N_APP, render, version: "0.1.0" });
-</script>
+<div id="root"></div>
+<noscript>This app needs JavaScript turned on.</noscript>
+<script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
